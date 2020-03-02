@@ -7,6 +7,7 @@ import LoginOptionScreen from '../screens/LoginOptionScreen';
 import SigninScreen from '../screens/SigninScreen';
 import SignupScreen from '../screens/SignupScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import ResetPassScreen from '../screens/ResetPassScreen';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -43,7 +44,7 @@ const Nav = ({auth, trylocalSignin}) => {
   } else {
     return (
       <NavigationContainer>
-        <LoginStack.Navigator>
+        <LoginStack.Navigator initialRouteName="ResetPass">
           <>
             {auth.asyncLoading ? (
               <LoginStack.Screen name="Loading" component={LoadingScreen} />
@@ -55,6 +56,10 @@ const Nav = ({auth, trylocalSignin}) => {
                 />
                 <LoginStack.Screen name="Signin" component={SigninScreen} />
                 <LoginStack.Screen name="Signup" component={SignupScreen} />
+                <LoginStack.Screen
+                  name="ResetPass"
+                  component={ResetPassScreen}
+                />
               </>
             )}
           </>

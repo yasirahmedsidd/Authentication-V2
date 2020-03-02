@@ -1,11 +1,13 @@
 import UserApi from '../../apis/UserApi';
 import AsyncStorage from '@react-native-community/async-storage';
 import Reactotron from 'reactotron-react-native';
+
 export const actions = {
-  SET_TOKEN: 'SET_TOKEN',
-  ERROR: 'ERROR',
+  // Loading
   LOADING_START: 'LOADING_START',
   LOADING_END: 'LOADING_END',
+  SET_TOKEN: 'SET_TOKEN',
+  ERROR: 'ERROR',
   DELETE_TOKEN: 'DELETE_TOKEN',
   CLEAR_ERROR: 'CLEAR_ERROR',
   //async storage actions
@@ -15,6 +17,38 @@ export const actions = {
   ASYNC_GET_TOKEN: 'ASYNC_GET_TOKEN',
   ASYNC_DELETE_TOKEN: 'ASYNC_DELETE_TOKEN',
   ASYNC_ERROR: 'ASYNC_ERROR',
+  // reset pass
+  SET_RESET_CODE: 'SET_RESET_CODE',
+  SET_RESET_TOKEN: 'SET_RESET_TOKEN',
+};
+
+export const resetPassOne = contact => {
+  const bodyData = {contact};
+  Reactotron.log('Resetting password for : ', bodyData);
+  return async dispatch => {
+    try {
+      dispatch({
+        type: actions.LOADING_START,
+      });
+      UserApi.post('/user/reset-password', bodyData)
+        .then(res => {
+          dispatch({
+            type: actions.SET_RESET_CODE,
+            data: res.data.msg,
+          });
+          dispatch({
+            type: actions.SET_RESET_TOKEN,
+            data: res.data.token,
+          });
+          return res;
+        })
+        .then(res => {
+          Reactotron.log(res);
+        });
+    } catch (err) {
+      Reactotron.log(err);
+    }
+  };
 };
 
 export const createUser = (contact, pass) => {

@@ -4,6 +4,8 @@ const initialState = {
   isLoading: false,
   error: '',
   asyncLoading: false,
+  resToken: null,
+  resCode: null,
 };
 
 export default (state = initialState, {type, data}) => {
@@ -31,6 +33,12 @@ export default (state = initialState, {type, data}) => {
 
     case actions.ASYNC_LOADING_END:
       return {...state, asyncLoading: false};
+
+    case actions.SET_RESET_CODE:
+      return {...state, resCode: data};
+
+    case actions.SET_RESET_TOKEN:
+      return {...state, resToken: data};
 
     default:
       return state;
