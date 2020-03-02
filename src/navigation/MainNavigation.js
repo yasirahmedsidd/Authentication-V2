@@ -14,7 +14,6 @@ import {trylocalSignin} from '../redux/actions/authActions';
 import {View, Text} from 'react-native';
 
 const LoginStack = createStackNavigator();
-
 const LoadingScreen = ({navigation}) => {
   navigation.setOptions({
     headerShown: false,
