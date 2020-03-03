@@ -1,14 +1,19 @@
+/* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
-  Button,
   ActivityIndicator,
   TouchableOpacity,
   Dimensions,
   StatusBar,
+  TextInput,
+  StyleSheet,
 } from 'react-native';
+
+import OTPInputView from '@twotalltotems/react-native-otp-input';
+
 import {useNavigation} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -17,6 +22,7 @@ import reactotron from 'reactotron-react-native';
 
 const ResetPassScreen2 = ({resResponse, resToken, resLoading, verifyCode}) => {
   const navigation = useNavigation();
+  const [code, setCode] = useState('');
   return (
     <View style={{backgroundColor: '#000', flex: 1, paddingTop: 100}}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
@@ -28,10 +34,25 @@ const ResetPassScreen2 = ({resResponse, resToken, resLoading, verifyCode}) => {
       <View style={{alignItems: 'center'}}>
         <Text style={{color: '#fff', fontSize: 24}}>Enter Code</Text>
       </View>
-      <Text
+
+      <View style={{alignItems: 'center'}}>
+        <OTPInputView
+          style={{width: '80%', height: 200}}
+          pinCount={4}
+          code={code}
+          onCodeChanged={setCode}
+          autoFocusOnLoad
+          codeInputFieldStyle={styles.underlineStyleBase}
+          codeInputHighlightStyle={styles.underlineStyleHighLighted}
+          onCodeFilled={code => {
+            console.log(`Code is ${code}, you are good to go!`);
+          }}
+        />
+      </View>
+      {/* <Text
         style={{fontSize: 24, alignSelf: 'center', padding: 20, color: '#FFF'}}>
         1 - 1 - 1 - 1
-      </Text>
+      </Text> */}
       <View
         style={{
           alignItems: 'center',
@@ -44,7 +65,7 @@ const ResetPassScreen2 = ({resResponse, resToken, resLoading, verifyCode}) => {
             <TouchableOpacity
               onPress={() => {
                 try {
-                  verifyCode('1111', resToken);
+                  verifyCode(code, resToken);
                   navigation.navigate('ResetPass3');
                 } catch (error) {
                   console.log(error);
@@ -71,6 +92,27 @@ const ResetPassScreen2 = ({resResponse, resToken, resLoading, verifyCode}) => {
   );
 };
 
+const styles = StyleSheet.create({
+  borderStyleBase: {
+    width: 30,
+    height: 45,
+  },
+
+  borderStyleHighLighted: {
+    borderColor: '#03DAC6',
+  },
+
+  underlineStyleBase: {
+    width: 30,
+    height: 45,
+    borderWidth: 0,
+    borderBottomWidth: 1,
+  },
+
+  underlineStyleHighLighted: {
+    borderColor: '#03DAC6',
+  },
+});
 const mapStateToProps = state => ({
   resResponse: state.auth.resResponse,
   resToken: state.auth.resToken,

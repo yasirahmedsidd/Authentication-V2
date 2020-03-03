@@ -59,6 +59,11 @@ export default (state = initialState, {type, data}) => {
     case actions.CLEAR_RESET:
       return {
         ...state,
+        token: null,
+        isLoading: false,
+        error: '',
+        asyncLoading: false,
+
         resLoading: false,
         resToken: null,
         resResponse: null,

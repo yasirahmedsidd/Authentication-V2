@@ -18,7 +18,7 @@ const SignupScreen = ({auth, createUser}) => {
   const [pass, setPass] = useState('');
 
   useEffect(() => {
-    setContact(Math.floor(Math.random(0.4) * 100000000000).toString());
+    setContact('033' + Math.floor(Math.random(0.4) * 100000000).toString());
     setPass('12345678');
   }, []);
   const navigation = useNavigation();

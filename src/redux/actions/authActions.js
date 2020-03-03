@@ -44,6 +44,9 @@ export const changePass = (newPassword, resToken) => {
           data: 0,
         });
         dispatch({
+          type: actions.CLEAR_RESET,
+        });
+        dispatch({
           type: actions.RESET_PASS_LOADING_END,
         });
       })
@@ -54,7 +57,7 @@ export const changePass = (newPassword, resToken) => {
           data: err,
         });
         dispatch({
-          type: actions.CLEAR_RESET,
+          type: actions.RESET_PASS_LOADING_END,
         });
       });
   };
@@ -85,7 +88,7 @@ export const verifyCode = (code, resToken) => {
 
         dispatch({
           type: actions.RESET_PASS_ERROR,
-          data: err,
+          data: err.message,
         });
         dispatch({
           type: actions.RESET_PASS_LOADING_END,

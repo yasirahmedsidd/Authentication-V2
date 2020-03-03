@@ -16,7 +16,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 const SigninScreen = props => {
-  const [contact, setContact] = useState('11111111111');
+  const [contact, setContact] = useState('03462348352');
   const [pass, setPass] = useState('12345678');
 
   const navigation = useNavigation();
