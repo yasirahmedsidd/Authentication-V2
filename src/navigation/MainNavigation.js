@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-shadow */
 import React, {useEffect} from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -8,6 +10,8 @@ import SigninScreen from '../screens/SigninScreen';
 import SignupScreen from '../screens/SignupScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ResetPassScreen from '../screens/ResetPassScreen';
+import ResetPassScreen2 from '../screens/ResetPassScreen2';
+import ResetPassScreen3 from '../screens/ResetPassScreen3';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -15,6 +19,18 @@ import {trylocalSignin} from '../redux/actions/authActions';
 import {View, Text} from 'react-native';
 
 const LoginStack = createStackNavigator();
+const ResetPassStack = createStackNavigator();
+
+const ResetPassword = () => {
+  return (
+    <ResetPassStack.Navigator screenOptions={{headerShown: false}}>
+      <ResetPassStack.Screen name="ResetPass1" component={ResetPassScreen} />
+      <ResetPassStack.Screen name="ResetPass2" component={ResetPassScreen2} />
+      <ResetPassStack.Screen name="ResetPass3" component={ResetPassScreen3} />
+    </ResetPassStack.Navigator>
+  );
+};
+
 const LoadingScreen = ({navigation}) => {
   navigation.setOptions({
     headerShown: false,
@@ -44,7 +60,7 @@ const Nav = ({auth, trylocalSignin}) => {
   } else {
     return (
       <NavigationContainer>
-        <LoginStack.Navigator initialRouteName="ResetPass">
+        <LoginStack.Navigator>
           <>
             {auth.asyncLoading ? (
               <LoginStack.Screen name="Loading" component={LoadingScreen} />
@@ -57,8 +73,9 @@ const Nav = ({auth, trylocalSignin}) => {
                 <LoginStack.Screen name="Signin" component={SigninScreen} />
                 <LoginStack.Screen name="Signup" component={SignupScreen} />
                 <LoginStack.Screen
-                  name="ResetPass"
-                  component={ResetPassScreen}
+                  name="Reset"
+                  component={ResetPassword}
+                  options={{headerShown: false}}
                 />
               </>
             )}
@@ -73,29 +90,5 @@ const mapStateToProps = state => ({auth: state.auth});
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators({trylocalSignin}, dispatch);
+// eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(Nav);
-
-{
-  /* <NavigationContainer>
-<LoginStack.Navigator>
-  {auth.token ? (
-    <LoginStack.Screen name="Profile" component={ProfileScreen} />
-  ) : (
-    <>
-      {auth.asyncLoading && !auth.token ? (
-        <LoginStack.Screen name="Loading" component={LoadingScreen} />
-      ) : (
-        <>
-          <LoginStack.Screen
-            name="LoginOptions"
-            component={LoginOptionScreen}
-          />
-          <LoginStack.Screen name="Signin" component={SigninScreen} />
-          <LoginStack.Screen name="Signup" component={SignupScreen} />
-        </>
-      )}
-    </>
-  )}
-</LoginStack.Navigator>
-</NavigationContainer> */
-}

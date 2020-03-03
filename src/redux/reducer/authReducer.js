@@ -4,8 +4,12 @@ const initialState = {
   isLoading: false,
   error: '',
   asyncLoading: false,
+
+  resLoading: false,
   resToken: null,
-  resCode: null,
+  resResponse: null,
+  resCount: 1,
+  resError: '',
 };
 
 export default (state = initialState, {type, data}) => {
@@ -34,11 +38,33 @@ export default (state = initialState, {type, data}) => {
     case actions.ASYNC_LOADING_END:
       return {...state, asyncLoading: false};
 
-    case actions.SET_RESET_CODE:
-      return {...state, resCode: data};
+    case actions.RESET_PASS_LOADING_START:
+      return {...state, resLoading: true};
+
+    case actions.RESET_PASS_LOADING_END:
+      return {...state, resLoading: false};
+
+    case actions.SET_RESET_CODE_RESPONSE:
+      return {...state, resResponse: data};
 
     case actions.SET_RESET_TOKEN:
       return {...state, resToken: data};
+
+    case actions.RESET_PASS_ERROR:
+      return {...state, resError: data};
+
+    case actions.SET_RES_COUNT:
+      return {...state, resCount: data};
+
+    case actions.CLEAR_RESET:
+      return {
+        ...state,
+        resLoading: false,
+        resToken: null,
+        resResponse: null,
+        resCount: 1,
+        resError: '',
+      };
 
     default:
       return state;

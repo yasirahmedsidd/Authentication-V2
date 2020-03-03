@@ -107,7 +107,7 @@ const SigninScreen = props => {
         {/* Reset Password */}
         <View style={{marginTop: 20}}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('ResetPass')}
+            onPress={() => navigation.navigate('Reset')}
             style={{
               width: Dimensions.get('window').width / 4,
               height: 50,

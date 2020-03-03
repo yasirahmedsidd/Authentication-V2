@@ -1,25 +1,25 @@
+/* eslint-disable no-alert */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
   Text,
   View,
-  StatusBar,
   TextInput,
   Dimensions,
-  TouchableOpacity,
+  Button,
   ActivityIndicator,
+  StatusBar,
+  TouchableOpacity,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {resetPassOne} from '../redux/actions/authActions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-const ResetPassScreen = ({auth, resetPassOne}) => {
-  const [contact, setContact] = useState('03462348352');
+import {changePass} from '../redux/actions/authActions';
+import {useNavigation} from '@react-navigation/native';
 
+const ResetPassScreen3 = ({auth, changePass}) => {
   const navigation = useNavigation();
-  navigation.setOptions({
-    headerShown: false,
-  });
+
+  const [newPass, setNewPass] = useState('12345678');
   return (
     <View style={{backgroundColor: '#000', flex: 1, paddingTop: 100}}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
@@ -38,8 +38,8 @@ const ResetPassScreen = ({auth, resetPassOne}) => {
           <TextInput
             autoCorrect={false}
             autoCapitalize="none"
-            value={contact}
-            onChangeText={setContact}
+            value={newPass}
+            onChangeText={setNewPass}
             style={{
               width: Dimensions.get('window').width - 100,
               height: 50,
@@ -54,18 +54,17 @@ const ResetPassScreen = ({auth, resetPassOne}) => {
             }}
           />
         </View>
-
         <View style={{marginTop: 20}}>
           {auth.resLoading ? (
             <ActivityIndicator size="large" color="#fff" />
           ) : (
             <TouchableOpacity
               onPress={() => {
-                resetPassOne(contact);
-                navigation.navigate('ResetPass2');
+                changePass(newPass, auth.resToken);
+                navigation.navigate('LoginOptions');
               }}
               style={{
-                width: Dimensions.get('window').width / 4,
+                width: Dimensions.get('window').width / 3,
                 height: 50,
                 borderWidth: 1,
                 borderColor: '#fff',
@@ -73,7 +72,7 @@ const ResetPassScreen = ({auth, resetPassOne}) => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{color: '#fff'}}>Reset</Text>
+              <Text style={{color: '#fff'}}>Change Password</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -81,10 +80,9 @@ const ResetPassScreen = ({auth, resetPassOne}) => {
     </View>
   );
 };
+
 const mapStateToProps = state => ({auth: state.auth});
-
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({resetPassOne}, dispatch);
-
+  bindActionCreators({changePass}, dispatch);
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(ResetPassScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ResetPassScreen3);

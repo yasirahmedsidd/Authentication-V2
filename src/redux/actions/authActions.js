@@ -18,36 +18,119 @@ export const actions = {
   ASYNC_DELETE_TOKEN: 'ASYNC_DELETE_TOKEN',
   ASYNC_ERROR: 'ASYNC_ERROR',
   // reset pass
-  SET_RESET_CODE: 'SET_RESET_CODE',
+  RESET_PASS_LOADING_START: 'RESET_PASS_LOADING_START',
+  RESET_PASS_LOADING_END: 'RESET_PASS_LOADING_END',
+  SET_RESET_CODE_RESPONSE: 'SET_RESET_CODE_RESPONSE',
   SET_RESET_TOKEN: 'SET_RESET_TOKEN',
+  RESET_PASS_ERROR: 'RESET_PASS_ERROR',
+  SET_RES_COUNT: 'SET_RES_COUNT',
+  CLEAR_RESET: 'CLEAR_RESET',
 };
 
-export const resetPassOne = contact => {
-  const bodyData = {contact};
-  Reactotron.log('Resetting password for : ', bodyData);
+export const changePass = (newPassword, resToken) => {
   return async dispatch => {
-    try {
-      dispatch({
-        type: actions.LOADING_START,
-      });
-      UserApi.post('/user/reset-password', bodyData)
-        .then(res => {
-          dispatch({
-            type: actions.SET_RESET_CODE,
-            data: res.data.msg,
-          });
-          dispatch({
-            type: actions.SET_RESET_TOKEN,
-            data: res.data.token,
-          });
-          return res;
-        })
-        .then(res => {
-          Reactotron.log(res);
+    dispatch({
+      type: actions.RESET_PASS_LOADING_START,
+    });
+
+    UserApi.post(
+      '/update-password',
+      {newPassword},
+      {headers: {'x-auth-token': resToken}},
+    )
+      .then(res => {
+        dispatch({
+          type: actions.SET_RES_COUNT,
+          data: 0,
         });
-    } catch (err) {
-      Reactotron.log(err);
-    }
+        dispatch({
+          type: actions.RESET_PASS_LOADING_END,
+        });
+      })
+      .catch(err => {
+        Reactotron.log(err);
+        dispatch({
+          type: actions.RESET_PASS_ERROR,
+          data: err,
+        });
+        dispatch({
+          type: actions.CLEAR_RESET,
+        });
+      });
+  };
+};
+
+export const verifyCode = (code, resToken) => {
+  return async dispatch => {
+    dispatch({
+      type: actions.RESET_PASS_LOADING_START,
+    });
+
+    UserApi.post('/code-check', {code}, {headers: {'x-auth-token': resToken}})
+      .then(res => {
+        dispatch({
+          type: actions.SET_RESET_TOKEN,
+          data: res.data.token,
+        });
+        dispatch({
+          type: actions.SET_RES_COUNT,
+          data: 3,
+        });
+        dispatch({
+          type: actions.RESET_PASS_LOADING_END,
+        });
+      })
+      .catch(err => {
+        Reactotron.log(err);
+
+        dispatch({
+          type: actions.RESET_PASS_ERROR,
+          data: err,
+        });
+        dispatch({
+          type: actions.RESET_PASS_LOADING_END,
+        });
+      });
+  };
+};
+export const resetPassOne = contact => {
+  return async dispatch => {
+    dispatch({
+      type: actions.RESET_PASS_LOADING_START,
+    });
+    Reactotron.log('Data to be sent : ', contact);
+
+    UserApi.post('/reset-password', {contact})
+      .then(res => {
+        dispatch({
+          type: actions.SET_RESET_CODE_RESPONSE,
+          data: res.data.msg,
+        });
+        dispatch({
+          type: actions.SET_RESET_TOKEN,
+          data: res.data.token,
+        });
+
+        dispatch({
+          type: actions.SET_RES_COUNT,
+          data: 2,
+        });
+
+        dispatch({
+          type: actions.RESET_PASS_LOADING_END,
+        });
+      })
+      .catch(err => {
+        Reactotron.log(err);
+
+        dispatch({
+          type: actions.RESET_PASS_ERROR,
+          data: err,
+        });
+        dispatch({
+          type: actions.RESET_PASS_LOADING_END,
+        });
+      });
   };
 };
 
